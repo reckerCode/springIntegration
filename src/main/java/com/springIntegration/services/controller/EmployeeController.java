@@ -36,7 +36,18 @@ public class EmployeeController {
      */
 
     @GetMapping(value = "/processEmployeeStatus/{status}")
-    public String processEmployeeStatus (@PathVariable("status") String status) {
+    public String processEmployeeStatus(@PathVariable("status") String status) {
         return employeeGateway.processEmployeeStatus(status);
+    }
+
+    //splitter
+
+    /**
+     * The splitter is a SI component whose role is to partition a message into several parts and send the resulting
+     * messages to be processed independently
+     */
+    @GetMapping(value = "/getManagerList/{managers}")
+    public String getManagerList(@PathVariable("managers") String managers) {
+        return employeeGateway.getManagerList(managers);
     }
 }

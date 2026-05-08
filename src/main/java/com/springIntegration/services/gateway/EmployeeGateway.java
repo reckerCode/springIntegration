@@ -25,10 +25,18 @@ public interface EmployeeGateway {
     public Message<Employee> hireEmployee(Employee employee);
 
     /**
-     *
+     * Transformer
      * @param status
      * @return
      */
     @Gateway(requestChannel = "emp-status-channel")
     String processEmployeeStatus(String status);
+
+    /**
+     * Splitter
+     * @param managers
+     * @return
+     */
+    @Gateway(requestChannel = "emp-managers-channel")
+    String getManagerList(String managers);
 }

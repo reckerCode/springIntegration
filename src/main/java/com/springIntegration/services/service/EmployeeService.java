@@ -1,11 +1,16 @@
 package com.springIntegration.services.service;
 
 import com.springIntegration.services.models.Employee;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.integration.annotation.ServiceActivator;
+import org.springframework.integration.annotation.Splitter;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The service activator is the endpoint type for connecting any Spring-managed
@@ -13,6 +18,7 @@ import org.springframework.stereotype.Service;
  * <p>
  * The request goes from Gateway(request channel) to Service(input channel)
  */
+@Slf4j
 @Service
 public class EmployeeService {
 
@@ -68,10 +74,26 @@ public class EmployeeService {
                 .copyHeaders(message.getHeaders())
                 .build();
     }
-    // Common output channel
 
+    //Splitter
+    @Splitter(inputChannel = "emp-managers-channel",
+            outputChannel = "output-channel")
+    List<Message<String>> splitMessageString(Message<?> message) {
+        List<Message<String>> messages = new ArrayList<>();
+        String[] msg = message.getPayload().toString().split(",");
+        for (String s : msg) {
+            Message<String> splitMessage = MessageBuilder.withPayload(s)
+                    .copyHeaders(message.getHeaders())
+                    .build();
+            messages.add(splitMessage);
+        }
+        return messages;
+    }
+
+    // Common output channel
     @ServiceActivator(inputChannel = "output-channel")
     public void consumeStringMessage(Message<String> message) {
+        log.info("output-channel: {}", message.getPayload());
         MessageChannel replyChannel = (MessageChannel) message.getHeaders().getReplyChannel();
         if (replyChannel != null) {
             replyChannel.send(message);
