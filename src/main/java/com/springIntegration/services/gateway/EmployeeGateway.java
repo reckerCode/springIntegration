@@ -39,4 +39,10 @@ public interface EmployeeGateway {
      */
     @Gateway(requestChannel = "emp-managers-channel")
     String getManagerList(String managers);
+
+    @Gateway(requestChannel = "dev-emp-channel")
+    String getEmployeeIfADeveloper(String empDesignation);
+
+    @Gateway(requestChannel = "emp-department-channel")
+    Employee getEmployeeDepartment(Employee employee);
 }

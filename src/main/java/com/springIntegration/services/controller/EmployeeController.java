@@ -1,5 +1,6 @@
 package com.springIntegration.services.controller;
 
+import com.springIntegration.services.exception.GenericException;
 import com.springIntegration.services.gateway.EmployeeGateway;
 import com.springIntegration.services.models.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,5 +50,33 @@ public class EmployeeController {
     @GetMapping(value = "/getManagerList/{managers}")
     public String getManagerList(@PathVariable("managers") String managers) {
         return employeeGateway.getManagerList(managers);
+    }
+
+    //Filter
+
+    /**
+     * Message filters are used to decide whether a message should be passed along or dropped based on some criteria.
+     */
+    @ResponseStatus()
+    @ExceptionHandler(GenericException.class)
+    @GetMapping(value = "/getEmployeeIfADeveloper/{empDesignation}")
+    public String getEmployeeIfADeveloper(@PathVariable("empDesignation") String empDesignation) {
+        return employeeGateway.getEmployeeIfADeveloper(empDesignation);
+    }
+
+    //Router
+
+    /**
+     * A code component responsible for directing a message to a specific message channels based on defined conditions
+     * or the message's content. It acts as a dynamic traffic controller between an input channel and multiple potential
+     * output channels.
+     * <p/>
+     * Routers consume messages from a channel and forward each consumed message to one or more different message
+     * channel depending on a set of conditions.
+     */
+
+    @GetMapping(value = "/getEmployeeDepartment")
+    public Employee getEmployeeDepartment(@RequestBody Employee employee) {
+        return employeeGateway.getEmployeeDepartment(employee);
     }
 }
